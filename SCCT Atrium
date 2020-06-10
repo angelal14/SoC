@@ -31,21 +31,6 @@ class InstructionView(arcade.View):
         self.window.show_view(game_view)
 
 
-class Button(arcade.View):
-    def __init__(self):
-        super().__init__()
-        arcade.draw_rectangle_filled(745,350,100,50,arcade.color.LAVENDER_BLUE,270)
-        arcade.draw_text("OPUS",690,370,arcade.color.BLACK,30,font_name="calibri",bold=True,italic=True,
-                         anchor_x="center",rotation=270)
-
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        arcade.draw_rectangle_filled(300,300,300,300,arcade.color.BLACK)
-
-        opus_game_view = Instruction2View
-        # opus_game_view.setup()
-        self.window.show_view(opus_game_view)
-
-
 class MyGame(arcade.View):
     """
     Main application class.
@@ -62,12 +47,10 @@ class MyGame(arcade.View):
         self.chair_list = None
         self.col_list = None
         self.table_list = None
-        self.button = None
 
     def setup(self):
         #Create your sprites and sprite lists here
-
-        self.button = Button()
+        arcade.draw_rectangle_filled(745, 350, 95, 400, arcade.color.BANANA_MANIA)
 
         self.tree_list = arcade.SpriteList()
         for y in range(185,600,150):
@@ -98,7 +81,8 @@ class MyGame(arcade.View):
         self.tree_list.draw()
         self.chair_list.draw()
         self.table_list.draw()
-        arcade.draw_rectangle_filled(745,350,95,400,arcade.color.BANANA_MANIA)
+        arcade.draw_rectangle_filled(745,430,150,50,arcade.color.LAVENDER_BLUE,270)
+        arcade.draw_text("OPUS",745,400,arcade.color.BLACK,18,anchor_x="center",rotation=270)
 
     def on_update(self, delta_time):
         """
@@ -109,8 +93,9 @@ class MyGame(arcade.View):
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         """ If user presses mouse button, show Opus game instructions. """
-        game_view = Instruction2View()
-        self.window.show_view(game_view)
+        if x>720 and x<770 and y>355 and y<505:
+            game_view = Instruction2View()
+            self.window.show_view(game_view)
 
 
 class Instruction2View(arcade.View):
@@ -134,10 +119,24 @@ class Instruction2View(arcade.View):
 
 
 class OpusView(arcade.View):
-    def on_show(self):
-        arcade.set_background_color(arcade.color.LAVENDER_BLUE)
+
+    def __init__(self):
+        super().__init__()
+        arcade.set_background_color(arcade.color.BISQUE)
         arcade.start_render()
         arcade.finish_render()
+        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
+        #Initialize sprite lists here, set them to None
+        self.instructions = None
+
+    def setup(self):
+        pass
+    def on_draw(self):
+        pass
+    def on_update(self, delta_time: float):
+        pass
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        pass
 
 
 def main():
