@@ -1,141 +1,159 @@
 """
-Project 1: SCCT Atrium & Opus Game
-"""
+Project 1 for Summer of Code.
 
+Player can walk around atrium to talk to characters & make drinks at Opus
+
+"""
 import arcade
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Starting Template"
-SPEED = 10
+SCREEN_TITLE = "Project 1"
 
 
-class MyGame(arcade.Window):
+class InstructionView(arcade.View):
+    def on_show(self):
+        arcade.set_background_color(arcade.color.DARK_SALMON)
+        #DARK_SALMON or LAVENDER_BLUE
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text("Instructions Screen",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.WHITE, font_size=50,anchor_x="center")
+        arcade.draw_text("Click to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
+                         arcade.color.WHITE, font_size=25, anchor_x="center")
+
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If user presses mouse button, start the game. """
+        game_view = MyGame()
+        game_view.setup()
+        self.window.show_view(game_view)
+
+
+class Button(arcade.View):
+    def __init__(self):
+        super().__init__()
+        arcade.draw_rectangle_filled(745,350,100,50,arcade.color.LAVENDER_BLUE,270)
+        arcade.draw_text("OPUS",690,370,arcade.color.BLACK,30,font_name="calibri",bold=True,italic=True,
+                         anchor_x="center",rotation=270)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        arcade.draw_rectangle_filled(300,300,300,300,arcade.color.BLACK)
+
+        opus_game_view = Instruction2View
+        # opus_game_view.setup()
+        self.window.show_view(opus_game_view)
+
+
+class MyGame(arcade.View):
     """
     Main application class.
 
     """
 
-    def __init__(self, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-
-        arcade.set_background_color(arcade.color.AMAZON)
-
-        # If you have sprite lists, you should create them here,
-        # and set them to None
-        self.monkey = None
-        self.move_sound = None
-        self.banana_list = None
-        self.num_banana = 0
-        self.time = 0
-
-        #characters
-        self.Char0 = None
+    def __init__(self):
+        super().__init__()
+        arcade.set_background_color(arcade.color.ANTIQUE_WHITE)
+        arcade.start_render()
+        arcade.finish_render()
+        #Initialize sprite lists here, set them to None
+        self.tree_list = None
+        self.chair_list = None
+        self.col_list = None
+        self.table_list = None
+        self.button = None
 
     def setup(self):
-        # Create your sprites and sprite lists here
-        self.monkey = arcade.Sprite("images/monkey.png", scale=0.1,
-                                    center_x=400, center_y=400)
+        #Create your sprites and sprite lists here
 
-        self.move_sound = arcade.load_sound("images/banana.wav")
+        self.button = Button()
 
-        self.banana_list = arcade.SpriteList()
-        for x in range(100,400,100):
-            banana = arcade.Sprite("images/banana.png",scale=0.1,
-                                   center_x=x, center_y=200)
-            self.banana_list.append(banana)
+        self.tree_list = arcade.SpriteList()
+        for y in range(185,600,150):
+            tree = arcade.Sprite("game1_images/tree.png", scale=0.15,
+                                  center_x=150, center_y=y)
+            self.tree_list.append(tree)
+
+        self.chair_list = arcade.SpriteList()
+        for y in range(185,600,83):
+            chair = arcade.Sprite("game1_images/armchair.png", scale=0.125,
+                                  center_x = 60, center_y=y)
+            self.chair_list.append(chair)
+
+        self.table_list = arcade.SpriteList()
+        for y in range(90, 600, 150):
+            for x in range(290,650,120):
+                table = arcade.Sprite("game1_images/table.png", scale=0.078,
+                                      center_x=x, center_y=y)
+                self.table_list.append(table)
 
 
     def on_draw(self):
         """
-        Render the screen.
+        the .draw() command will clear the screen to the background color
+        and erase that we drew last frame.
+        call draw() on all ur sprite lists below
         """
+        self.tree_list.draw()
+        self.chair_list.draw()
+        self.table_list.draw()
+        arcade.draw_rectangle_filled(745,350,95,400,arcade.color.BANANA_MANIA)
 
-        # This command should happen before we start drawing. It will clear
-        # the screen to the background color, and erase what we drew last frame.
-        # Call draw() on all your sprite lists below
+    def on_update(self, delta_time):
+        """
+        All the logic to move, and the game logic goes here (???)
+        Normally, you'll call update() on the sprite lists that need it.
+        """
+        pass
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+        """ If user presses mouse button, show Opus game instructions. """
+        game_view = Instruction2View()
+        self.window.show_view(game_view)
 
 
+class Instruction2View(arcade.View):
+    def on_show(self):
+        arcade.set_background_color(arcade.color.BLACK)
         arcade.start_render()
-        self.monkey.draw()
-        self.banana_list.draw()
+        arcade.finish_render()
 
-        self.eat = arcade.check_for_collision_with_list(self.monkey,self.banana_list)
-        for banana in self.eat:
-            self.banana_list.remove(banana)
-            self.num_banana += 1
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text("ENTER INSTRUCTIONS HERE",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.WHITE, font_size=40, anchor_x="center")
+        arcade.draw_text("Click to play", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
+                         arcade.color.WHITE, font_size=20, anchor_x="center")
 
-        num_banana = f"# of Bananas: {self.num_banana}"
-        arcade.draw_text(num_banana, 600, 50, arcade.color.AQUA, 20)
-
-
-
-    def on_update(self, time):
-        """
-        All the logic to move, and the game logic goes here.
-        Normally, you'll call update() on the sprite lists that
-        need it.
-        """
-        self.monkey.update()
-        self.time += time
-
-    def on_key_press(self, key, mod):
-        """
-        Called whenever a key on the keyboard is pressed.
-
-        For a full list of keys, see:
-        http://arcade.academy/arcade.key.html
-        """
-        if key == arcade.key.LEFT:
-            self.monkey.change_x = -SPEED
-        elif key == arcade.key.RIGHT:
-            self.monkey.change_x = +SPEED
-        elif key == arcade.key.DOWN:
-            self.monkey.change_y = -SPEED
-        elif key == arcade.key.UP:
-            self.monkey.change_y = +SPEED
-            arcade.play_sound(self.move_sound)
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If user presses mouse button, start OPUS game. """
+        opus_game_view = OpusView()
+        self.window.show_view(opus_game_view)
 
 
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-        """
-        if key == arcade.key.LEFT:
-            self.monkey.change_x = 0
-        elif key == arcade.key.RIGHT:
-            self.monkey.change_x = 0
-        elif key == arcade.key.DOWN:
-            self.monkey.change_y = 0
-        elif key == arcade.key.UP:
-            # self.monkey.change_y = -10
-            self.monkey.change_y = 0
 
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
-        pass
-
-    def on_mouse_press(self, x, y, button, key_modifiers):
-        """
-        Called when the user presses a mouse button.
-        """
-        pass
-
-    def on_mouse_release(self, x, y, button, key_modifiers):
-        """
-        Called when a user releases a mouse button.
-        """
-        pass
+class OpusView(arcade.View):
+    def on_show(self):
+        arcade.set_background_color(arcade.color.LAVENDER_BLUE)
+        arcade.start_render()
+        arcade.finish_render()
 
 
 def main():
-    """ Main method """
-    game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    game.setup()
-    arcade.run()
+        """ Main method """
 
+        window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        start_view = InstructionView()
+        window.show_view(start_view)
+        arcade.run()
+
+        # game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        # # arcade.set_background_color(arcade.color.ANTIQUE_WHITE)
+        # # arcade.start_render()
+        # # arcade.finish_render()
+        # game.setup()
+        # arcade.run()
 
 if __name__ == "__main__":
-    main()
+        main()
