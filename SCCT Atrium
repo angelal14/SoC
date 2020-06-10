@@ -21,12 +21,12 @@ class InstructionView(arcade.View):
         arcade.start_render()
         arcade.draw_text("Instructions Screen",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.WHITE, font_size=50,anchor_x="center")
-        arcade.draw_text("Click to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
+        arcade.draw_text("Press any key to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
                          arcade.color.WHITE, font_size=25, anchor_x="center")
 
 
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ If user presses mouse button, start the game. """
+    def on_key_press(self, symbol, modifiers):
+        """ When user presses key, enter next screen. """
         game_view = MyGame()
         game_view.setup()
         self.window.show_view(game_view)
@@ -49,8 +49,10 @@ class MyGame(arcade.View):
         self.col_list = None
         self.table_list = None
         self.time = 0
+        self.opus = None
 
         #characters
+        # self.char_list = None
         self.char1 = None
         self.char2 = None
         self.char3 = None
@@ -58,10 +60,14 @@ class MyGame(arcade.View):
         self.char5 = None
         self.char6 = None
 
+        #dialogue boxes
+        self.speech1 = None
+        self.speech2 = None
+        self.speech3 = None
+        self.speech4 = None
 
     def setup(self):
         #Create your sprites and sprite lists here
-        arcade.draw_rectangle_filled(745, 350, 95, 400, arcade.color.BANANA_MANIA)
 
         self.tree_list = arcade.SpriteList()
         for y in range(185,600,150):
@@ -83,25 +89,32 @@ class MyGame(arcade.View):
                 self.table_list.append(table)
 
         #characters
-        self.char1 = arcade.Sprite("game1_images/Char1.png", scale=0.24,
+        self.char1 = arcade.Sprite("game1_images/Char1.png", scale=0.22,
                                    center_x=290,center_y=400)
-        self.char2 = arcade.Sprite("game1_images/Char2.png", scale=0.24,
-                                   center_x=410,center_y=550)
-        self.char3 = arcade.Sprite("game1_images/Char3.png", scale=0.24,
+        self.char2 = arcade.Sprite("game1_images/Char2.png", scale=0.22,
+                                   center_x=410,center_y=400)
+        self.char3 = arcade.Sprite("game1_images/Char3.png", scale=0.22,
                                    center_x=530,center_y=90)
-        self.char4 = arcade.Sprite("game1_images/Char4.png", scale=0.24,
+        self.char4 = arcade.Sprite("game1_images/Char4.png", scale=0.22,
                                    center_x=530,center_y=240)
-        self.char5 = arcade.Sprite("game1_images/Char5.png", scale=0.24,
+        self.char5 = arcade.Sprite("game1_images/Char5.png", scale=0.22,
                                    center_x=200,center_y=100)
 
+        # self.char_list = arcade.SpriteList()
+        # self.char_list.append(self.char1)
+        # self.char_list.append(self.char2)
+        # self.char_list.append(self.char3)
+        # self.char_list.append(self.char4)
 
     def on_draw(self):
+        arcade.start_render()
         #sprite lists
         self.tree_list.draw()
         self.chair_list.draw()
         self.table_list.draw()
-        arcade.draw_rectangle_filled(745,430,150,50,arcade.color.LAVENDER_BLUE,270)
-        arcade.draw_text("OPUS",745,400,arcade.color.BLACK,18,anchor_x="center",rotation=270)
+        arcade.draw_rectangle_filled(745, 350, 95, 400, arcade.color.BANANA_MANIA)
+        self.opus = arcade.Sprite("game1_images/opus.png",center_x=745,center_y=430,scale=0.55)
+        self.opus.draw()
 
         #characters
         self.char1.draw()
@@ -110,6 +123,44 @@ class MyGame(arcade.View):
         self.char4.draw()
         self.char5.draw()
 
+        #check collision -- THERE HAS TO BE A CLEANER WAY TO DO THIS??
+        self.collide_char1 = arcade.check_for_collision(self.char5,self.char1)
+        if self.collide_char1 == True:
+            self.speech1 = arcade.Sprite("game1_images/dialogue.png",scale=0.07,
+                          center_x=270,center_y=475)
+            self.speech1.draw()
+            arcade.draw_text("Have you\ntried Opus\ntoday?",270,450,arcade.color.BLACK,10,
+                             anchor_x="center",rotation=20)
+
+        self.collide_char2 = arcade.check_for_collision(self.char5,self.char2)
+        if self.collide_char2 == True:
+            self.speech2 = arcade.Sprite("game1_images/dialogue270.png",scale=0.07,
+                                         center_x=460,center_y=465)
+            self.speech2.draw()
+            arcade.draw_text("Aren't\nyou late\n    for\n   work??",465,440,arcade.color.BLACK,10,
+                             anchor_x="center")
+
+        self.collide_char3 = arcade.check_for_collision(self.char5,self.char3)
+        if self.collide_char3 == True:
+            self.speech3 = arcade.Sprite("game1_images/dialogue90.png",scale=0.07,
+                                         center_x=470,center_y=45)
+            self.speech3.draw()
+            arcade.draw_text("Have\nyou\ndone the\nhome-\nwork?",470,20,arcade.color.BLACK,9,
+                             anchor_x="center")
+
+        self.collide_char4 = arcade.check_for_collision(self.char5, self.char4)
+        if self.collide_char4 == True:
+            self.speech4 = arcade.Sprite("game1_images/dialogue270.png", scale=0.07,
+                                         center_x=580, center_y=300)
+            self.speech4.draw()
+            arcade.draw_text("Have\nfun at\nwork!", 580, 300, arcade.color.BLACK, 10,
+                             anchor_x="center")
+
+        self.collide_opus = arcade.check_for_collision(self.char5,self.opus)
+        if self.collide_opus == True:
+            game_view = Instruction2View()
+            self.window.show_view(game_view)
+
     def on_update(self, delta_time):
         """
         All the logic to move, and the game logic goes here (???)
@@ -117,7 +168,6 @@ class MyGame(arcade.View):
         """
         self.char5.update()
         self.time += delta_time
-        print(delta_time)
 
     def on_key_press(self, key, mod):
         if key == arcade.key.LEFT:
@@ -156,12 +206,17 @@ class Instruction2View(arcade.View):
         arcade.start_render()
         arcade.draw_text("ENTER INSTRUCTIONS HERE",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.WHITE, font_size=40, anchor_x="center")
-        arcade.draw_text("Click to play", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
+        arcade.draw_text("Press any key to play", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
+
+    def on_key_press(self, symbol, modifiers):
+        opus_game_view = OpusView()
+        self.window.show_view(opus_game_view)
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If user presses mouse button, start OPUS game. """
         opus_game_view = OpusView()
+        # opus_game_view.setup()
         self.window.show_view(opus_game_view)
 
 
@@ -173,17 +228,26 @@ class OpusView(arcade.View):
         arcade.set_background_color(arcade.color.BISQUE)
         arcade.start_render()
         arcade.finish_render()
-        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
         #Initialize sprite lists here, set them to None
         self.instructions = None
+        self.boss = None
 
     def setup(self):
         pass
+
     def on_draw(self):
+        arcade.start_render()
+        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
+
+        self.boss = arcade.Sprite("game1_images/boss.png", scale=0.5,
+                                  center_x=400, center_y=300)
+        self.boss.draw()
+
+    def on_update(self, delta_time):
+        # self.boss.update()
         pass
-    def on_update(self, delta_time: float):
-        pass
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+
+    def on_mouse_press(self, x, y, button, modifiers):
         pass
 
 
