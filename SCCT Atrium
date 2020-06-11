@@ -13,17 +13,28 @@ SPEED = 10
 
 
 class InstructionView(arcade.View):
-    def on_show(self):
+    def __init__(self):
+        super().__init__()
         arcade.set_background_color(arcade.color.DARK_SALMON)
         #DARK_SALMON or LAVENDER_BLUE
 
+        self.eyes = None
+        self.arrows = None
+
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("Instructions Screen",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                         arcade.color.WHITE, font_size=50,anchor_x="center")
-        arcade.draw_text("Press any key to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
-                         arcade.color.WHITE, font_size=25, anchor_x="center")
+        arcade.draw_text("OPUS MANIA       ",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100,
+                         arcade.color.WHITE, font_size=60,anchor_x="center")
+        arcade.draw_text("Use the four arrow keys to move around and speak\n       to friends. "
+                         "Walk into Opus to start working!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40,
+                         arcade.color.WHITE,font_size=20,anchor_x="center")
+        arcade.draw_text("Press any key to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 210,
+                         arcade.color.WHITE, font_size=17, anchor_x="center")
+        self.eyes = arcade.Sprite("game1_images/eyes.png",scale=0.12,center_x=620,center_y=445)
+        self.arrows = arcade.Sprite("game1_images/arrows.png",scale=0.4,center_x=SCREEN_WIDTH / 2, center_y=SCREEN_HEIGHT / 2 - 70)
 
+        self.eyes.draw()
+        self.arrows.draw()
 
     def on_key_press(self, symbol, modifiers):
         """ When user presses key, enter next screen. """
@@ -100,12 +111,6 @@ class MyGame(arcade.View):
         self.char5 = arcade.Sprite("game1_images/Char5.png", scale=0.22,
                                    center_x=200,center_y=100)
 
-        # self.char_list = arcade.SpriteList()
-        # self.char_list.append(self.char1)
-        # self.char_list.append(self.char2)
-        # self.char_list.append(self.char3)
-        # self.char_list.append(self.char4)
-
     def on_draw(self):
         arcade.start_render()
         #sprite lists
@@ -113,7 +118,7 @@ class MyGame(arcade.View):
         self.chair_list.draw()
         self.table_list.draw()
         arcade.draw_rectangle_filled(745, 350, 95, 400, arcade.color.BANANA_MANIA)
-        self.opus = arcade.Sprite("game1_images/opus.png",center_x=745,center_y=430,scale=0.55)
+        self.opus = arcade.Sprite("game1_images/opus.png",center_x=745,center_y=430,scale=0.1525)
         self.opus.draw()
 
         #characters
@@ -189,25 +194,24 @@ class MyGame(arcade.View):
         elif key == arcade.key.UP:
             self.char5.change_y = 0
 
-    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        """ If user presses on lavendar OPUS button, switch screens to show Opus game instructions. """
-        if x>720 and x<770 and y>355 and y<505:
-            game_view = Instruction2View()
-            self.window.show_view(game_view)
-
 
 class Instruction2View(arcade.View):
     def on_show(self):
-        arcade.set_background_color(arcade.color.BLACK)
+        arcade.set_background_color(arcade.color.DARK_SALMON)
         arcade.start_render()
         arcade.finish_render()
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("ENTER INSTRUCTIONS HERE",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+        arcade.draw_text("You are entering Opus\n            to work!",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 30,
                          arcade.color.WHITE, font_size=40, anchor_x="center")
-        arcade.draw_text("Press any key to play", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 75,
-                         arcade.color.WHITE, font_size=20, anchor_x="center")
+        arcade.draw_text("Click on the right ingredients to make the\n"
+                         "                      desired drink!",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 50,
+                         arcade.color.WHITE, font_size=20,anchor_x="center")
+        arcade.draw_text("Press any key to play", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 175,
+                         arcade.color.WHITE, font_size=17, anchor_x="center")
 
     def on_key_press(self, symbol, modifiers):
         opus_game_view = OpusView()
@@ -216,7 +220,6 @@ class Instruction2View(arcade.View):
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If user presses mouse button, start OPUS game. """
         opus_game_view = OpusView()
-        # opus_game_view.setup()
         self.window.show_view(opus_game_view)
 
 
@@ -226,29 +229,42 @@ class OpusView(arcade.View):
     def __init__(self):
         super().__init__()
         arcade.set_background_color(arcade.color.BISQUE)
+        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
         arcade.start_render()
         arcade.finish_render()
+
         #Initialize sprite lists here, set them to None
         self.instructions = None
         self.boss = None
+        self.you = None
+        self.wannabeyours = None
+
 
     def setup(self):
-        pass
+        self.you = arcade.Sprite("game1_images/you.png", scale=0.45,
+                                 center_x=720, center_y=100)
+        self.boss = arcade.Sprite("game1_images/boss.png", scale=0.19,
+                                  center_x=100, center_y=460)
+        self.instructions = arcade.draw_text("Hey! Glad you could make it to work. We have\n"
+                         "a busy day ahead of us!", 140, 500, arcade.color.BLACK, 18)
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
-
-        self.boss = arcade.Sprite("game1_images/boss.png", scale=0.5,
-                                  center_x=400, center_y=300)
+        self.you.draw()
         self.boss.draw()
+        self.instructions.draw()
+        arcade.draw_text("(Press Space to continue)", 320, 480, arcade.color.BLACK, 10)
 
     def on_update(self, delta_time):
-        # self.boss.update()
         pass
 
     def on_mouse_press(self, x, y, button, modifiers):
         pass
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.SPACE:
+            self.instructions = arcade.draw_text("TEST TRIGGERED", 400, 300, arcade.color.BLACK, 20)
+            self.instructions.draw()
 
 
 def main():
@@ -258,13 +274,6 @@ def main():
         start_view = InstructionView()
         window.show_view(start_view)
         arcade.run()
-
-        # game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-        # # arcade.set_background_color(arcade.color.ANTIQUE_WHITE)
-        # # arcade.start_render()
-        # # arcade.finish_render()
-        # game.setup()
-        # arcade.run()
 
 if __name__ == "__main__":
         main()
