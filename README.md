@@ -8,10 +8,13 @@ Project 1: Opus Mania
 3. I have a vision of doing this: on the opening screen, the player can choose which character they want to be. Then that changes which characters are stationary in the atrium. But then that means when creating the Sprites, I need to make the image file's name a variable... how would I do that? Maybe store all the characters in a list, and remove the character that the player chooses from the list...?? Want a more solid idea
 4. [This is just a note to myself:] Maybe during the game, the character can earn money. Then, when they're done playing the Opus game, they can go back to the Science Center atrium to buy something from a friend! Kind of like an easter egg surprise at the end.
 
-##### Jiin's Tips
-**"Get" function that gets center of a sprite... even while it moves?:** self.player.get_position()
-**Can't bold or italicize text,** but you can do font_name="Comic Sans MS" or any other system fonts, like from Microsoft Word. Also, anchor_x="center" and align="center" do different things but both are useful. 
-**To update text:** you can totally pass a variable when calling draw_text(). You can also do an f-string which allows you to write string words & a string variable in the same line.
+#### **Jiin's Tips**
+**1. "Get" function that gets center of a sprite... even while it moves?:** self.player.get_position()
+
+**2. Can't bold or italicize text,** but you can do font_name="Comic Sans MS" or any other system fonts, like from Microsoft Word. Also, anchor_x="center" and align="center" do different things but both are useful. 
+
+**3. To update text:** you can totally pass a variable when calling draw_text(). You can also do an f-string which allows you to write string words & a string variable in the same line.
+
 
 
 
