@@ -8,7 +8,7 @@ Project 1: Opus Mania
 3. How to change text to Bold, change the font, or center the text? Whenever I write bold=True in creating text, it doesn't actually bold it.. 
 4. Relating to Question3, is there a way to update text, like a set_text() function? That way, you don't have to re-create text in the same location repeatedly? 
 5. How do you prevent the character from running over a table/chair/tree? I know you can check for collision...and then call stop() on the character? 
-6. I have a vision of doing this: on the opening screen, the player can choose which character they want to be. Then that changes which characters are stationary in the atrium. But then that means when creating the Sprites, I need to make the image file's name a variable... how would I do that? 
+6. I have a vision of doing this: on the opening screen, the player can choose which character they want to be. Then that changes which characters are stationary in the atrium. But then that means when creating the Sprites, I need to make the image file's name a variable... how would I do that? Maybe store all the characters in a list, and remove the character that the player chooses from the list...?? Want a more solid idea
 7. [This is just a note to myself:] Maybe during the game, the character can earn money. Then, when they're done playing the Opus game, they can go back to the Science Center atrium to buy something from a friend! Kind of like an easter egg surprise at the end.
 
 
