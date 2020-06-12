@@ -199,12 +199,7 @@ class MyGame(arcade.View):
             self.char5.change_y = 0
         elif key == arcade.key.UP:
             self.char5.change_y = 0
-
-    #DELETE THIS LATER... JUST FOR TESTING USE
-    def on_key_press(self, symbol, modifiers):
-            game_view = Instruction2View()
-            self.window.show_view(game_view)
-
+            
 
 class Instruction2View(arcade.View):
     def on_show(self):
