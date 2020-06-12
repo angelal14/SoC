@@ -4,7 +4,7 @@ Project 1: Opus Mania
 
 ## **Questions**
 1. Why does it give me this error: 'NoneType' object has no attribute 'draw' for my Sprite self.you.draw()? I initialized the sprite in the initializer, set it up in setup(), and called .draw() on it... but it is still apparently NoneType? What does that mean? 
-2. Is there any way to make a “GET” function that gets the center of a Sprite? (Even while it moves?) Can't seem to find any online. 
+2. Is there any way to make a “get” function that gets the center of a Sprite? (Even while it moves?) Can't seem to find any online. 
 3. How to change text to Bold, change the font, or center the text? Whenever I write bold=True in creating text, it doesn't actually bold it.. 
 4. Relating to Question3, is there a way to update text, like a set_text() function? That way, you don't have to re-create text in the same location repeatedly? 
 5. How do you prevent the character from running over a table/chair/tree? I know you can check for collision...and then call stop() on the character? 
