@@ -199,7 +199,12 @@ class MyGame(arcade.View):
             self.char5.change_y = 0
         elif key == arcade.key.UP:
             self.char5.change_y = 0
-            
+
+    #DELETE THIS LATER... JUST FOR TESTING USE
+#     def on_key_press(self, symbol, modifiers):
+#             game_view = Instruction2View()
+#             self.window.show_view(game_view)
+
 
 class Instruction2View(arcade.View):
     def on_show(self):
@@ -238,14 +243,17 @@ class OpusView(arcade.View):
         arcade.set_background_color(arcade.color.BISQUE)
 
         #Initialize sprite lists here, set them to None
+
         self.instructions = "Hey! Glad you could make it to work. We have\na busy day ahead of us!"
         self.press_space = "(Press SPACE to continue)"
-        self.pos_x = 140
-        self.pos_y = 500
+        self.pos_x = SCREEN_WIDTH / 2
+        self.pos_y = 525
         self.you = None
         self.boss = None
         self.wannabeyours = None
 
+        self.space_count = 0
+        self.cup = None
         #music lol
         # self.wannabeyours = .load_sound("game1_images/wannabeyours.mp3")
         # arcade.play_sound(self.wannabeyours)
@@ -253,6 +261,7 @@ class OpusView(arcade.View):
     def setup(self):
         self.you = arcade.Sprite("game1_images/you.png", scale=0.45, center_x=720, center_y=100)
         self.boss = arcade.Sprite("game1_images/boss.png", scale=0.19, center_x=100, center_y=460)
+        self.cup = arcade.Sprite("game1_images/cup.png",scale=0.23,center_x=400,center_y=270)
 
     def on_draw(self):
         arcade.start_render()
@@ -260,7 +269,8 @@ class OpusView(arcade.View):
         self.boss.draw()
 
         arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
-        arcade.draw_text(self.instructions, self.pos_x, self.pos_y, arcade.color.BLACK, 18,font_name="Comic Sans MS", align="center")
+        arcade.draw_text(self.instructions, self.pos_x, self.pos_y, arcade.color.BLACK, 16,font_name="Comic Sans MS",
+                         anchor_x="center",anchor_y="center",align="center")
         arcade.draw_text(self.press_space, 320, 480, arcade.color.BLACK, 10)
 
     def on_update(self, delta_time):
@@ -270,9 +280,25 @@ class OpusView(arcade.View):
         pass
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
-            self.instructions = "TEST TRIGGERED"
+        arcade.start_render()
+        if key == arcade.key.SPACE and self.space_count == 0:
+            self.cup.draw()
             self.press_space = ""
+            self.instructions = "I'll handle the customer transactions and tell\n" \
+                                "you what drinks to make. This cup icon will\n" \
+                                "indicate what ingredients you've added."
+            self.space_count += 1
+        elif key == arcade.key.SPACE and self.space_count == 1:
+            self.instructions = "If you've messed up, you can start over by\n" \
+                                "using the trash can. Be cognizant of how\n" \
+                                "long you take!"
+            self.space_count += 1
+        elif key == arcade.key.SPACE and self.space_count == 2:
+            self.instructions = "...It's finals week, so students won't like\n" \
+                                "waiting too long. Ready? Good luck!"
+            self.space_count += 1
+        elif key == arcade.key.SPACE and self.space_count == 3:
+            self.instructions = "Game starts..."
 
 
 def main():
