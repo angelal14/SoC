@@ -4,9 +4,10 @@ Project 1: Opus Mania
 
 ## **Questions**
 1. Is there a way to overlap pictures so that you can see both on top of one another??? 
-2. How do you prevent the character from running over a table/chair/tree? I know you can check for collision...and then call stop() on the character? 
-3. I have a vision of doing this: on the opening screen, the player can choose which character they want to be. Then that changes which characters are stationary in the atrium. But then that means when creating the Sprites, I need to make the image file's name a variable... how would I do that? Maybe store all the characters in a list, and remove the character that the player chooses from the list...?? Want a more solid idea
-4. [This is just a note to myself:] Maybe during the game, the character can earn money. Then, when they're done playing the Opus game, they can go back to the Science Center atrium to buy something from a friend! Kind of like an easter egg surprise at the end.
+2. How do you update text more than once?? 
+3. (Less important) How do you prevent the character from running over a table/chair/tree? I know you can check for collision...and then call stop() on the character? 
+4. I have a vision of doing this: on the opening screen, the player can choose which character they want to be. Then that changes which characters are stationary in the atrium. But then that means when creating the Sprites, I need to make the image file's name a variable... how would I do that? Maybe store all the characters in a list, and remove the character that the player chooses from the list...?? Want a more solid idea
+5. [This is just a note to myself:] Maybe during the game, the character can earn money. Then, when they're done playing the Opus game, they can go back to the Science Center atrium to buy something from a friend! Kind of like an easter egg surprise at the end.
 
 #### **Jiin's Tips**
 **1. "Get" function that gets center of a sprite... even while it moves?:** self.player.get_position()
