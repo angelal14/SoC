@@ -39,12 +39,10 @@ class Opening(arcade.View):
 
     def on_key_press(self, symbol, modifiers):
         """ When user presses key, enter next screen. """
-
-        """For faster testing purposes. """
-        # atrium_view = MyGame()
-        # game_view = OpusView(atrium_view)
-
-        game_view = MyGame()
+        atrium_view = MyGame()
+        # atrium_view.setup()
+        # self.window.show_view(atrium_view)
+        game_view = OpusView(atrium_view)
         game_view.setup()
         self.window.show_view(game_view)
 
@@ -312,6 +310,16 @@ class OpusView(arcade.View):
         #popup logic
         self.proceed = False
         self.popup_text = ""
+        self.tea_popup = False
+        self.tea_list = None
+        self.curr_tea = None
+        self.tea_list_increment = 0
+        self.matcha = None
+        self.passion_tango = None
+        self.guava_white = None
+        self.tea_selected = ""
+        self.test_text = ""
+        self.indicator = ""
 
     def setup(self):
         self.you = arcade.Sprite("game1_images/you.png", scale=0.45, center_x=500, center_y=305)
@@ -356,11 +364,26 @@ class OpusView(arcade.View):
             self.complete = True
 
     def add_tea(self):
-        if arcade.check_for_collision(self.you, self.iced_tea) and self.ice_done == True:
-            # make a popup asking for selection of flavors, then set self.cup = respective flavor
-            self.cup = arcade.Sprite("game1_images/guava_white_tea.png", scale=0.18, center_x=400, center_y=305)
+        if arcade.check_for_collision(self.you, self.iced_tea) and self.ice_done == True and self.indicator == "":
+            self.tea_popup = True
+
+        elif arcade.check_for_collision(self.you,self.boss):
+            if self.indicator == "Matcha Done" and "Matcha" in self.instructions:
+                self.test_text = "Matcha in self.instructions and self.tea_selected==Matcha"
+                self.tea_selected = ""
+                self.indicator = ""
+                self.complete = True
+            if self.indicator == "Passion Tango Done" and "Passion Tango" in self.instructions:
+                self.test_text = "Passion Tango in self.instructions and self.tea_selected == Passion Tango"
+                self.tea_selected = ""
+                self.indicator = ""
+                self.complete = True
+            if self.indicator == "Guava White Done" and "Guava White" in self.instructions:
+                self.test_text = "Guava White in self.instructions and self.tea_selected == Guava White"
+                self.tea_selected = ""
+                self.indicator = ""
+                self.complete = True
             self.ice_done = False
-            self.complete = True
 
     def add_syrup(self):
         if arcade.check_for_collision(self.you, self.syrup_station) and self.cup_empty == True:
@@ -427,6 +450,7 @@ class OpusView(arcade.View):
             self.syrup_done = False
             self.ice_done = False
             self.coffee_done = False
+            self.indicator = ""
             self.complete = False
             self.cup_empty = True
             self.cup = arcade.Sprite("game1_images/cup.png", scale=0.18, center_x=400, center_y=305)
@@ -441,27 +465,56 @@ class OpusView(arcade.View):
                              align="center",font_name="Comic Sans MS",font_size=18)
 
         #instructions popup
-        if self.proceed == False:
-            arcade.draw_rectangle_filled(400,300,650,450,arcade.color.LIGHT_PINK)
-            self.popup_text = "INSERT INSTRUCTIONS, press ENTER"
-            arcade.draw_text(self.popup_text,400,300,arcade.color.BLACK,20,anchor_x="center",
+        if self.proceed == False and self.tea_popup == False:
+            arcade.draw_rectangle_filled(400,300,450,250,arcade.color.LIGHT_PINK + (200,))
+            self.popup_text = "INSERT INSTRUCTIONS,\npress ENTER to play"
+            arcade.draw_text(self.popup_text,400,300,arcade.color.BLACK,17,anchor_x="center",
                             anchor_y="center",align="center",font_name="Comic Sans MS")
 
+        #tea selection popup
+        if self.tea_popup == True:
+            arcade.draw_rectangle_filled(400,300,580,270,arcade.color.LIGHT_GRAY)
+            arcade.draw_text("Press the RIGHT & LEFT arrows to toggle flavors,\npress ENTER to select.",400,380,
+                             arcade.color.BLACK,17,anchor_x="center",anchor_y="center",align="center",
+                             font_name="Comic Sans MS")
+            self.tea_list = arcade.SpriteList()
+            self.matcha = arcade.Sprite("game1_images/matcha.png",scale=0.12,center_x=300,center_y=230)
+            self.passion_tango = arcade.Sprite("game1_images/passion_tango.png",scale=0.12,center_x=400,center_y=230)
+            self.guava_white = arcade.Sprite("game1_images/guava_white_tea.png", scale=0.12, center_x=500, center_y=230)
+            self.tea_list.append(self.matcha)
+            self.tea_list.append(self.passion_tango)
+            self.tea_list.append(self.guava_white)
+            self.tea_list.draw()
+            arcade.draw_text("Matcha",300,200,arcade.color.BLACK,10,anchor_x="center",anchor_y="center",
+                             align="center",font_name="Comic Sans MS")
+            arcade.draw_text("Passion\nTango",400,200,arcade.color.BLACK,10,anchor_x="center",anchor_y="center",
+                             align="center",font_name="Comic Sans MS")
+            arcade.draw_text("Guava White",500,200,arcade.color.BLACK,10,anchor_x="center",anchor_y="center",
+                             align="center",font_name="Comic Sans MS")
+
+            self.curr_tea = self.tea_list[(self.tea_list_increment) % 3]
+            arcade.draw_lrtb_rectangle_filled(left=self.curr_tea.left, right=self.curr_tea.right,
+                                                top=self.curr_tea.top, bottom=self.curr_tea.bottom,
+                                                color=arcade.color.WHITE + (200,))
+
         #"game over" popup
-        if self.failed == True:
-            self.proceed = False
-            arcade.draw_rectangle_filled(400,300,600,400,arcade.color.BANANA_MANIA)
-            self.popup_text = "Game Over"
-            arcade.draw_text(self.popup_text,400,360,arcade.color.BLACK,20,anchor_x="center",
-                            anchor_y="center",align="center",font_name="Comic Sans MS")
-            #play again button
-            arcade.draw_rectangle_filled(400,250,200,100,arcade.color.LIGHT_PINK)
-            arcade.draw_text("Play Again",400,250, arcade.color.BLACK,15,
-                             anchor_x="center",anchor_y="center",align="center", font_name="Comic Sans MS")
-            #return to atrium button
-            arcade.draw_rectangle_filled(400,150,100,50,arcade.color.LIGHT_PINK)
-            arcade.draw_text("Return to atrium",400,150,arcade.color.BLACK,anchor_x="center",
-                             anchor_y="center",align="center",font_size=10)
+        # if self.failed == True:
+        #     self.proceed = False
+        #     arcade.draw_rectangle_filled(400,300,600,400,arcade.color.BANANA_MANIA)
+        #     self.popup_text = "Game Over"
+        #     arcade.draw_text(self.popup_text,400,360,arcade.color.BLACK,20,anchor_x="center",
+        #                     anchor_y="center",align="center",font_name="Comic Sans MS")
+        #     #play again button
+        #     arcade.draw_rectangle_filled(400,250,200,100,arcade.color.LIGHT_PINK)
+        #     arcade.draw_text("Play Again",400,250, arcade.color.BLACK,15,
+        #                      anchor_x="center",anchor_y="center",align="center", font_name="Comic Sans MS")
+        #     #return to atrium button
+        #     arcade.draw_rectangle_filled(400,150,100,50,arcade.color.LIGHT_PINK)
+        #     arcade.draw_text("Return to atrium",400,150,arcade.color.BLACK,anchor_x="center",
+        #                      anchor_y="center",align="center",font_size=10)
+
+        arcade.draw_text(self.test_text, 400, 300, arcade.color.BLACK, 18,anchor_x="center",anchor_y="center",align="center")
+
 
     def on_update(self, delta_time):
         if self.proceed == True:
@@ -492,6 +545,8 @@ class OpusView(arcade.View):
             self.new_order = random.choice(self.order)
             self.cup = arcade.Sprite("game1_images/cup.png", scale=0.18, center_x=400, center_y=305)
             self.cup_empty = True
+
+            #increasing levels of difficulty
             if self.levels_completed <= 2:
                 self.time = 35
                 self.level = 1
@@ -510,7 +565,7 @@ class OpusView(arcade.View):
             elif self.levels_completed > 20 and self.levels_completed <= 27:
                 self.time = 7
                 self.level = 6
-            elif self.levels_completed > 27 and self.levels <= 35:
+            elif self.levels_completed > 27 and self.levels_completed <= 35:
                 self.time = 5
                 self.level = "Impossible"
 
@@ -558,6 +613,37 @@ class OpusView(arcade.View):
                     self.you.change_y = -SPEED
                 elif key == arcade.key.UP:
                     self.you.change_y = +SPEED
+
+        #tea station popup
+        if self.tea_popup == True:
+            self.proceed = False
+            if key == arcade.key.LEFT:
+                self.tea_list_increment -= 1
+            if key == arcade.key.RIGHT:
+                self.tea_list_increment += 1
+            if key == arcade.key.ENTER:
+                self.tea_popup = False
+                self.proceed = True
+                self.tea_list_increment = 0
+
+                if self.curr_tea == self.matcha:
+                    self.cup = arcade.Sprite("game1_images/matcha.png", scale=0.18, center_x=400, center_y=305)
+                    self.tea_selected = "Matcha"
+                    self.test_text = "ENTER: Matcha in instructions and tea_selected==Matcha"
+                    self.indicator = "Matcha Done"
+                if self.curr_tea == self.passion_tango:
+                    self.cup = arcade.Sprite("game1_images/passion_tango.png", scale=0.18, center_x=400,
+                                                 center_y=305)
+                    self.tea_selected = "Passion Tango"
+                    self.test_text = "ENTER: Passion Tango in instructions and tea_selected == Passion Tango"
+                    self.indicator = "Passion Tango Done"
+                if self.curr_tea == self.guava_white:
+                    self.cup = arcade.Sprite("game1_images/guava_white_tea.png", scale=0.18, center_x=400,
+                                                 center_y=305)
+                    self.tea_selected = "Guava White"
+                    self.test_text = "ENTER: Guava White in instructions and tea_selected == Guava White"
+                    self.indicator = "Guava White Done"
+
 
     def on_key_release(self, key, key_modifiers):
         if key == arcade.key.LEFT:
