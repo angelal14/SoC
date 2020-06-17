@@ -471,7 +471,7 @@ class OpusView(arcade.View):
         #tea selection popup (this took me so long to make)
         if self.tea_popup == True:
             arcade.draw_rectangle_filled(400,300,580,270,arcade.color.LIGHT_GRAY)
-            arcade.draw_text("Press the RIGHT & LEFT arrows to toggle flavors,\npress ENTER to select.",400,380,
+            arcade.draw_text("Press the LEFT & RIGHT arrows to toggle flavors,\npress ENTER to select.",400,380,
                              arcade.color.BLACK,17,anchor_x="center",anchor_y="center",align="center",
                              font_name="Comic Sans MS")
             self.tea_list = arcade.SpriteList()
@@ -569,7 +569,7 @@ class OpusView(arcade.View):
                 self.level = "Impossible"
 
     def drink_check(self):
-        """ Updates what the "current drink" is. """
+        """ Updates what the 'current drink' is. """
         if "Iced Coffee" in self.instructions:
             self.drink = "Iced Coffee"
         elif "Iced Tea" in self.instructions:
