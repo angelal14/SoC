@@ -40,10 +40,8 @@ class Opening(arcade.View):
     def on_key_press(self, symbol, modifiers):
         """ When user presses key, enter next screen. """
         atrium_view = MyGame()
-        # atrium_view.setup()
-        # self.window.show_view(atrium_view)
-        game_view = OpusView(atrium_view)
-        game_view.setup()
+        atrium_view.setup()
+        self.window.show_view(atrium_view)
         self.window.show_view(game_view)
 
 
