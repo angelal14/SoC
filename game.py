@@ -40,8 +40,10 @@ class Opening(arcade.View):
     def on_key_press(self, symbol, modifiers):
         """ When user presses key, enter next screen. """
         atrium_view = MyGame()
-        atrium_view.setup()
-        self.window.show_view(atrium_view)
+        # atrium_view.setup()
+        # self.window.show_view(atrium_view)
+        game_view = OpusView(atrium_view)
+        game_view.setup()
         self.window.show_view(game_view)
 
 
@@ -315,8 +317,6 @@ class OpusView(arcade.View):
         self.matcha = None
         self.passion_tango = None
         self.guava_white = None
-        self.tea_selected = ""
-        self.test_text = ""
         self.indicator = ""
 
     def setup(self):
@@ -367,18 +367,12 @@ class OpusView(arcade.View):
 
         elif arcade.check_for_collision(self.you,self.boss):
             if self.indicator == "Matcha Done" and "Matcha" in self.instructions:
-                self.test_text = "Matcha in self.instructions and self.tea_selected==Matcha"
-                self.tea_selected = ""
                 self.indicator = ""
                 self.complete = True
             if self.indicator == "Passion Tango Done" and "Passion Tango" in self.instructions:
-                self.test_text = "Passion Tango in self.instructions and self.tea_selected == Passion Tango"
-                self.tea_selected = ""
                 self.indicator = ""
                 self.complete = True
             if self.indicator == "Guava White Done" and "Guava White" in self.instructions:
-                self.test_text = "Guava White in self.instructions and self.tea_selected == Guava White"
-                self.tea_selected = ""
                 self.indicator = ""
                 self.complete = True
             self.ice_done = False
@@ -496,22 +490,20 @@ class OpusView(arcade.View):
                                                 color=arcade.color.WHITE + (200,))
 
         #"game over" popup
-        # if self.failed == True:
-        #     self.proceed = False
-        #     arcade.draw_rectangle_filled(400,300,600,400,arcade.color.BANANA_MANIA)
-        #     self.popup_text = "Game Over"
-        #     arcade.draw_text(self.popup_text,400,360,arcade.color.BLACK,20,anchor_x="center",
-        #                     anchor_y="center",align="center",font_name="Comic Sans MS")
-        #     #play again button
-        #     arcade.draw_rectangle_filled(400,250,200,100,arcade.color.LIGHT_PINK)
-        #     arcade.draw_text("Play Again",400,250, arcade.color.BLACK,15,
-        #                      anchor_x="center",anchor_y="center",align="center", font_name="Comic Sans MS")
-        #     #return to atrium button
-        #     arcade.draw_rectangle_filled(400,150,100,50,arcade.color.LIGHT_PINK)
-        #     arcade.draw_text("Return to atrium",400,150,arcade.color.BLACK,anchor_x="center",
-        #                      anchor_y="center",align="center",font_size=10)
-
-        arcade.draw_text(self.test_text, 400, 300, arcade.color.BLACK, 18,anchor_x="center",anchor_y="center",align="center")
+        if self.failed == True:
+            self.proceed = False
+            arcade.draw_rectangle_filled(400,300,600,400,arcade.color.BANANA_MANIA)
+            self.popup_text = "Game Over"
+            arcade.draw_text(self.popup_text,400,360,arcade.color.BLACK,20,anchor_x="center",
+                            anchor_y="center",align="center",font_name="Comic Sans MS")
+            #play again button
+            arcade.draw_rectangle_filled(400,250,200,100,arcade.color.LIGHT_PINK)
+            arcade.draw_text("Play Again",400,250, arcade.color.BLACK,15,
+                             anchor_x="center",anchor_y="center",align="center", font_name="Comic Sans MS")
+            #return to atrium button
+            arcade.draw_rectangle_filled(400,150,100,50,arcade.color.LIGHT_PINK)
+            arcade.draw_text("Return to atrium",400,150,arcade.color.BLACK,anchor_x="center",
+                             anchor_y="center",align="center",font_size=10)
 
 
     def on_update(self, delta_time):
@@ -626,20 +618,14 @@ class OpusView(arcade.View):
 
                 if self.curr_tea == self.matcha:
                     self.cup = arcade.Sprite("game1_images/matcha.png", scale=0.18, center_x=400, center_y=305)
-                    self.tea_selected = "Matcha"
-                    self.test_text = "ENTER: Matcha in instructions and tea_selected==Matcha"
                     self.indicator = "Matcha Done"
                 if self.curr_tea == self.passion_tango:
                     self.cup = arcade.Sprite("game1_images/passion_tango.png", scale=0.18, center_x=400,
                                                  center_y=305)
-                    self.tea_selected = "Passion Tango"
-                    self.test_text = "ENTER: Passion Tango in instructions and tea_selected == Passion Tango"
                     self.indicator = "Passion Tango Done"
                 if self.curr_tea == self.guava_white:
                     self.cup = arcade.Sprite("game1_images/guava_white_tea.png", scale=0.18, center_x=400,
                                                  center_y=305)
-                    self.tea_selected = "Guava White"
-                    self.test_text = "ENTER: Guava White in instructions and tea_selected == Guava White"
                     self.indicator = "Guava White Done"
 
 
