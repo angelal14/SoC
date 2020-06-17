@@ -266,17 +266,18 @@ class OpusView(arcade.View):
         arcade.set_background_color(arcade.color.BISQUE)
         self.instructions = "Hey! Glad you could make it to work. We have\na busy day ahead of us!"
         self.press_space = "(Press SPACE to continue)"
-        self.pos_x = SCREEN_WIDTH / 2
-        self.pos_y = 525
         self.you = None
         self.boss = None
-        self.wannabeyours = None
-
-        self.space_count = 0
         self.cup = None
+
+        #counters
+        self.space_count = 0
+        self.order_num = 1
         self.time = 35
-        self.money_png = None
         self.money = 0
+        self.money_png = None
+        self.levels_completed = 0
+        self.level = 1
 
         #stations
         self.iced_tea = None
@@ -287,19 +288,15 @@ class OpusView(arcade.View):
         self.whipped_cream = None
         self.trash = None
 
-        self.game_start = False
+        #drink logic
         self.drink = None
-
-        #logic check
         self.syrup_done = False
         self.ice_done = False
         self.coffee_done = False
         self.complete = False
-        self.order_num = 1
         self.cup_empty = True
-        self.failed = False
-        self.levels_completed = 0
-        self.level = 1
+
+        #order setup
         self.order = ["Iced Coffee!\nYou need: ice, coffee, and milk.",
                       "Frappuccino!\nYou need: syrup, ice, espresso, and whipped cream.",
                       "Matcha Iced Tea!\nYou need: ice and a matcha flavor shot.",
@@ -307,8 +304,12 @@ class OpusView(arcade.View):
                       "Guava White Iced Tea Lemonade!\nYou need: ice and a guava white flavor shot."]
         self.new_order = random.choice(self.order)
 
+        #start/finish game logic
+        self.proceed = False #This is to control instructions popup
+        self.game_start = False #This is to control portion of game after you officially start
+        self.failed = False #This is to control end-of-game popup
+
         #popup logic
-        self.proceed = False
         self.popup_text = ""
         self.tea_popup = False
         self.tea_list = None
@@ -335,6 +336,7 @@ class OpusView(arcade.View):
         self.iced_tea = arcade.Sprite("game1_images/iced_tea.png",scale=0.15,center_x=730,center_y=230)
 
     def add_ice(self):
+        """ Adds ice to drinks. """
         if self.drink != "Frappuccino":
             if arcade.check_for_collision(self.you, self.ice_station) and self.cup_empty == True:
                 self.cup = arcade.Sprite("game1_images/ice_cup.png", scale=0.18, center_x=400, center_y=305)
@@ -347,6 +349,7 @@ class OpusView(arcade.View):
                 self.syrup_done = False
 
     def add_coffee(self):
+        """ Adds coffee to drink. """
         if arcade.check_for_collision(self.you, self.coffee_station) and self.ice_done == True:
             self.coffee_done = True
             self.ice_done = False
@@ -356,12 +359,14 @@ class OpusView(arcade.View):
                 self.cup = arcade.Sprite("game1_images/ice_coffee1.png", scale=0.18, center_x=400, center_y=305)
 
     def add_milk(self):
+        """ Adds milk to drink. """
         if arcade.check_for_collision(self.you, self.milk_station) and self.coffee_done == True:
             self.cup = arcade.Sprite("game1_images/ice_coffee2.png", scale=0.18, center_x=400, center_y=305)
             self.coffee_done = False
             self.complete = True
 
     def add_tea(self):
+        """ Triggers tea-selection popup, adds tea to drink. """
         if arcade.check_for_collision(self.you, self.iced_tea) and self.ice_done == True and self.indicator == "":
             self.tea_popup = True
 
@@ -378,12 +383,14 @@ class OpusView(arcade.View):
             self.ice_done = False
 
     def add_syrup(self):
+        """ Adds flavor shot to drink. """
         if arcade.check_for_collision(self.you, self.syrup_station) and self.cup_empty == True:
             self.cup = arcade.Sprite("game1_images/syrup.png", scale=0.18, center_x=400, center_y=305)
             self.syrup_done = True
             self.cup_empty = False
 
     def add_whipped_cream(self):
+        """ Adds whipped cream to drink. """
         if arcade.check_for_collision(self.you, self.whipped_cream) and self.coffee_done == True:
             self.cup = arcade.Sprite("game1_images/frap_cream.png", scale=0.18, center_x=400, center_y=305)
             self.coffee_done = False
@@ -391,15 +398,14 @@ class OpusView(arcade.View):
 
 
     def on_draw(self):
-        #setup
         arcade.start_render()
         self.boss.draw()
         arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
-        arcade.draw_text(self.instructions, self.pos_x, self.pos_y, arcade.color.BLACK, 16,font_name="Comic Sans MS",
+        arcade.draw_text(self.instructions, 400, 525, arcade.color.BLACK, 16,font_name="Comic Sans MS",
                          anchor_x="center",anchor_y="center",align="center")
         arcade.draw_text(self.press_space, 320, 480, arcade.color.BLACK, 10)
 
-        #monitor start of game
+        #draws the cup, shows countdown timer
         if self.space_count > 0:
             self.cup.draw()
         if self.game_start == True:
@@ -436,7 +442,7 @@ class OpusView(arcade.View):
             self.add_whipped_cream()
             self.check_complete()
 
-        #trash can to clear
+        #sets up TRASH CAN, empties the drink when you mess up.
         if arcade.check_for_collision(self.you,self.trash):
             #start fresh
             self.syrup_done = False
@@ -447,7 +453,6 @@ class OpusView(arcade.View):
             self.cup_empty = True
             self.cup = arcade.Sprite("game1_images/cup.png", scale=0.18, center_x=400, center_y=305)
 
-
         #show level
         if self.game_start == True:
             arcade.draw_text(f"Level: {self.level}",710,100,arcade.color.BLACK,anchor_x="center",
@@ -456,14 +461,14 @@ class OpusView(arcade.View):
             arcade.draw_text(f" = ${self.money:.2f}",740,50,arcade.color.BLACK,anchor_x="center",anchor_y="center",
                              align="center",font_name="Comic Sans MS",font_size=18)
 
-        #instructions popup
+        #initial instructions popup
         if self.proceed == False and self.tea_popup == False:
             arcade.draw_rectangle_filled(400,300,450,250,arcade.color.LIGHT_PINK + (200,))
             self.popup_text = "INSERT INSTRUCTIONS,\npress ENTER to play"
             arcade.draw_text(self.popup_text,400,300,arcade.color.BLACK,17,anchor_x="center",
                             anchor_y="center",align="center",font_name="Comic Sans MS")
 
-        #tea selection popup
+        #tea selection popup (this took me so long to make)
         if self.tea_popup == True:
             arcade.draw_rectangle_filled(400,300,580,270,arcade.color.LIGHT_GRAY)
             arcade.draw_text("Press the RIGHT & LEFT arrows to toggle flavors,\npress ENTER to select.",400,380,
@@ -489,7 +494,7 @@ class OpusView(arcade.View):
                                                 top=self.curr_tea.top, bottom=self.curr_tea.bottom,
                                                 color=arcade.color.WHITE + (200,))
 
-        #"game over" popup
+        #game over popup
         if self.failed == True:
             self.proceed = False
             arcade.draw_rectangle_filled(400,300,600,400,arcade.color.BANANA_MANIA)
@@ -507,6 +512,8 @@ class OpusView(arcade.View):
 
 
     def on_update(self, delta_time):
+        """ Manage countdown timer, update instructions, keep track
+            of what drink is currently being made. """
         if self.proceed == True:
             self.you.update()
             if self.game_start == True:
@@ -514,11 +521,12 @@ class OpusView(arcade.View):
                     self.time -= delta_time
                 self.instructions = f"Order {self.order_num}: {self.new_order}"
                 self.drink_check()
-
+                #triggers end-of-game popup if time runs out
                 if self.time < 0:
                     self.failed = True
 
     def increment_money(self):
+        """ Player earns different amounts of $$$ for different types of drinks. """
         if self.drink == "Frappuccino" and self.complete == True:
             self.money += 3.95
         elif self.drink == "Iced Coffee" and self.complete == True:
@@ -527,6 +535,7 @@ class OpusView(arcade.View):
             self.money += 2.25
 
     def check_complete(self):
+        """ Resets cup to empty, increments money earned/level/order number, updates the order. """
         if arcade.check_for_collision(self.you, self.boss) and self.complete == True:
             self.increment_money()
             self.complete = False
@@ -559,8 +568,8 @@ class OpusView(arcade.View):
                 self.time = 5
                 self.level = "Impossible"
 
-
     def drink_check(self):
+        """ Updates what the "current drink" is. """
         if "Iced Coffee" in self.instructions:
             self.drink = "Iced Coffee"
         elif "Iced Tea" in self.instructions:
@@ -574,6 +583,7 @@ class OpusView(arcade.View):
             self.proceed = True
 
         if self.proceed == True:
+            #manages dialogue that occurs before official game start.
             if key == arcade.key.SPACE and self.space_count == 0:
                 self.press_space = ""
                 self.instructions = "I'll handle the customer transactions and tell\n" \
@@ -593,7 +603,7 @@ class OpusView(arcade.View):
                 self.game_start = True
                 self.space_count += 1
 
-            #control player movement
+            #control player movement (once game officially starts)
             if self.space_count > 0:
                 if key == arcade.key.LEFT:
                     self.you.change_x = -SPEED
@@ -606,12 +616,15 @@ class OpusView(arcade.View):
 
         #tea station popup
         if self.tea_popup == True:
+            #scroll left/right through the options
             self.proceed = False
             if key == arcade.key.LEFT:
                 self.tea_list_increment -= 1
             if key == arcade.key.RIGHT:
                 self.tea_list_increment += 1
+
             if key == arcade.key.ENTER:
+                #exit tea-selection popout, update drink to reflect what flavor the player chose.
                 self.tea_popup = False
                 self.proceed = True
                 self.tea_list_increment = 0
@@ -628,8 +641,8 @@ class OpusView(arcade.View):
                                                  center_y=305)
                     self.indicator = "Guava White Done"
 
-
     def on_key_release(self, key, key_modifiers):
+        """ Ensures player doesn't fly off the screen. """
         if key == arcade.key.LEFT:
             self.you.change_x = 0
         elif key == arcade.key.RIGHT:
@@ -640,16 +653,18 @@ class OpusView(arcade.View):
             self.you.change_y = 0
 
     def on_mouse_press(self, x, y, button, modifiers):
+        """ When game is over, player can click on buttons to either play again or return to atrium. """
+        #play again option
         if self.failed == True and x>=300 and x<=500 and y>=200 and y<= 300:
             opus_view = OpusView(self.atrium_view)
             opus_view.setup()
             self.window.show_view(opus_view)
 
+        #atrium view
         if self.failed == True and x >= 350 and x <= 450 and y >= 100 and y <= 200:
             atrium_view = self.atrium_view
             atrium_view.setup()
             self.window.show_view(atrium_view)
-
 
 def main():
         """ Main method """
