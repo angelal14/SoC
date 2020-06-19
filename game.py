@@ -26,11 +26,11 @@ class Opening(arcade.View):
         arcade.start_render()
         arcade.draw_text("OPUS MANIA",340, SCREEN_HEIGHT / 2 + 100, arcade.color.WHITE, font_size=60,
                          anchor_x="center",align="center",font_name="Comic Sans MS")
-        arcade.draw_text("Use the four arrow keys to move around and speak\n to friends. "
+        arcade.draw_text("Use the four arrow keys to move around.\n"
                          "Walk into Opus to start working!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40,
-                         arcade.color.WHITE,font_size=20,align="center",anchor_x="center",font_name="Comic Sans MS")
+                         arcade.color.WHITE,font_size=22,align="center",anchor_x="center",font_name="Comic Sans MS")
         arcade.draw_text("Press any key to advance",SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 210,
-                         arcade.color.WHITE, font_size=17, align="center",anchor_x="center",font_name="Comic Sans MS")
+                         arcade.color.WHITE, font_size=20, align="center",anchor_x="center",font_name="Comic Sans MS")
         self.eyes = arcade.Sprite("game1_images/eyes.png",scale=0.12,center_x=660,center_y=445)
         self.arrows = arcade.Sprite("game1_images/arrows.png",scale=0.4,center_x=SCREEN_WIDTH / 2, center_y=SCREEN_HEIGHT / 2 - 70)
 
@@ -40,10 +40,10 @@ class Opening(arcade.View):
     def on_key_press(self, symbol, modifiers):
         """ When user presses key, enter next screen. """
         atrium_view = MyGame()
-        # atrium_view.setup()
-        # self.window.show_view(atrium_view)
-        game_view = OpusView(atrium_view)
-        game_view.setup()
+        atrium_view.setup()
+        self.window.show_view(atrium_view)
+        # game_view = OpusView(atrium_view)
+        # game_view.setup()
         self.window.show_view(game_view)
 
 
@@ -137,29 +137,29 @@ class MyGame(arcade.View):
             self.speech1 = arcade.Sprite("game1_images/dialogue.png",scale=0.07,
                           center_x=270,center_y=475)
             self.speech1.draw()
-            arcade.draw_text("Have you\ntried Opus\ntoday?",270,450,arcade.color.BLACK,10,
-                             anchor_x="center",rotation=20)
+            arcade.draw_text("Have you\ntried Opus\ntoday?",272,477,arcade.color.BLACK,10,
+                             anchor_x="center",anchor_y="center",rotation=20)
 
         if arcade.check_for_collision(self.char5,self.char2):
             self.speech2 = arcade.Sprite("game1_images/dialogue270.png",scale=0.07,
                                          center_x=460,center_y=465)
             self.speech2.draw()
-            arcade.draw_text("Aren't\nyou late\n    for\n   work??",465,440,arcade.color.BLACK,10,
-                             anchor_x="center")
+            arcade.draw_text("Aren't\nyou late\nfor\nwork??",461,465,arcade.color.BLACK,10,
+                             anchor_x="center",anchor_y="center",align="center",rotation=9)
 
         if arcade.check_for_collision(self.char5,self.char3):
             self.speech3 = arcade.Sprite("game1_images/dialogue90.png",scale=0.07,
                                          center_x=470,center_y=45)
             self.speech3.draw()
-            arcade.draw_text("Have\nyou\ndone the\nhome-\nwork?",470,20,arcade.color.BLACK,9,
-                             anchor_x="center")
+            arcade.draw_text("Have\nfun at\nwork!",467,49,arcade.color.BLACK,10,
+                             anchor_x="center",anchor_y="center",align="center",rotation=9)
 
         if arcade.check_for_collision(self.char5, self.char4):
             self.speech4 = arcade.Sprite("game1_images/dialogue270.png", scale=0.07,
                                          center_x=580, center_y=300)
             self.speech4.draw()
-            arcade.draw_text("Have\nfun at\nwork!", 580, 280, arcade.color.BLACK, 10,
-                             anchor_x="center")
+            arcade.draw_text("Have\nyou\ndone the\nhome-\nwork?", 580, 300, arcade.color.BLACK, 9,
+                             anchor_x="center",anchor_y="center",align="center",rotation=9)
 
         if arcade.check_for_collision(self.char5,self.opus):
             pause = PauseView(self)
@@ -298,10 +298,10 @@ class OpusView(arcade.View):
 
         #order setup
         self.order = ["Iced Coffee!\nYou need: ice, coffee, and milk.",
-                      "Frappuccino!\nYou need: syrup, ice, espresso, and whipped cream.",
-                      "Matcha Iced Tea!\nYou need: ice and a matcha flavor shot.",
-                      "Passion Tango Iced Tea!\nYou need: ice and a passion tango flavor shot.",
-                      "Guava White Iced Tea Lemonade!\nYou need: ice and a guava white flavor shot."]
+                      "Frappuccino!\nYou need: a flavor shot, ice, espresso, and whipped cream.",
+                      "Matcha Iced Tea!\nYou need: ice and matcha tea.",
+                      "Passion Tango Iced Tea!\nYou need: ice and passion tango tea.",
+                      "Guava White Iced Tea Lemonade!\nYou need: ice and guava white tea."]
         self.new_order = random.choice(self.order)
 
         #start/finish game logic
@@ -328,12 +328,12 @@ class OpusView(arcade.View):
 
         #stations
         self.trash = arcade.Sprite("game1_images/trash.png",scale=0.15,center_x=730,center_y=410)
-        self.coffee_station = arcade.Sprite("game1_images/coffee_station.jpg",scale=0.15,center_x=80,center_y=250)
-        self.milk_station = arcade.Sprite("game1_images/milk.png",scale=0.08,center_x=80,center_y=80)
-        self.syrup_station = arcade.Sprite("game1_images/syrup_station.png",scale=0.15,center_x=370,center_y=70)
-        self.ice_station = arcade.Sprite("game1_images/ice.jpg",scale=0.15,center_x=490,center_y=70)
-        self.whipped_cream = arcade.Sprite("game1_images/whipped_cream.png",scale=0.15,center_x=580,center_y=70)
-        self.iced_tea = arcade.Sprite("game1_images/iced_tea.png",scale=0.15,center_x=730,center_y=230)
+        self.coffee_station = arcade.Sprite("game1_images/coffee_station.jpg",scale=0.15,center_x=60,center_y=250)
+        self.milk_station = arcade.Sprite("game1_images/milk.png",scale=0.08,center_x=60,center_y=80)
+        self.iced_tea = arcade.Sprite("game1_images/iced_tea.png",scale=0.15,center_x=250,center_y=60)
+        self.syrup_station = arcade.Sprite("game1_images/syrup_station.png",scale=0.1,center_x=400,center_y=90)
+        self.ice_station = arcade.Sprite("game1_images/ice.jpg",scale=0.15,center_x=540,center_y=70)
+        self.whipped_cream = arcade.Sprite("game1_images/whipped_cream.png",scale=0.15,center_x=730,center_y=250)
 
     def add_ice(self):
         """ Adds ice to drinks. """
@@ -403,7 +403,7 @@ class OpusView(arcade.View):
         arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 520, 600, 100, arcade.color.LIGHT_STEEL_BLUE)
         arcade.draw_text(self.instructions, 400, 525, arcade.color.BLACK, 16,font_name="Comic Sans MS",
                          anchor_x="center",anchor_y="center",align="center")
-        arcade.draw_text(self.press_space, 320, 480, arcade.color.BLACK, 10)
+        arcade.draw_text(self.press_space, 320, 478, arcade.color.BLACK, 12)
 
         #draws the cup, shows countdown timer
         if self.space_count > 0:
@@ -463,6 +463,7 @@ class OpusView(arcade.View):
 
         #initial instructions popup
         if self.proceed == False and self.tea_popup == False:
+            arcade.draw_rectangle_filled(400, 300, 800, 600, arcade.color.WHITE + (100,))
             arcade.draw_rectangle_filled(400,300,450,250,arcade.color.LIGHT_PINK + (200,))
             self.popup_text = "INSERT INSTRUCTIONS,\npress ENTER to play"
             arcade.draw_text(self.popup_text,400,300,arcade.color.BLACK,17,anchor_x="center",
@@ -470,6 +471,7 @@ class OpusView(arcade.View):
 
         #tea selection popup (this took me so long to make)
         if self.tea_popup == True:
+            arcade.draw_rectangle_filled(400,300,800,600,arcade.color.WHITE + (100,))
             arcade.draw_rectangle_filled(400,300,580,270,arcade.color.LIGHT_GRAY)
             arcade.draw_text("Press the LEFT & RIGHT arrows to toggle flavors,\npress ENTER to select.",400,380,
                              arcade.color.BLACK,17,anchor_x="center",anchor_y="center",align="center",
